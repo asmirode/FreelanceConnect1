@@ -201,7 +201,8 @@
     }
 
     .menu {
-        width: 1400px;
+        width: 100%;
+        max-width: 1200px;
         padding-top: 10px;
         padding-bottom: 10px;
         display: flex;

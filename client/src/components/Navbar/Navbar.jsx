@@ -158,12 +158,10 @@ const Navbar = () => {
                         <Link key={99883} className='link menulink' to='/'>
                             Programming & Tech
                         </Link>
-                        <Link key={99083} className='link menulink' to='/'>
-                            Business
-                        </Link>
-                        <Link key={93983} className='link menulink' to='/'>
+            
+                        {/* <Link key={93983} className='link menulink' to='/'>
                             Lifestyle
-                        </Link>
+                        </Link> */}
                     </div>
                     <hr />
                 </>

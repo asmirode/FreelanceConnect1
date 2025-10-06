@@ -34,9 +34,9 @@ const Footer = () => {
                         <h2>Support</h2>
                         <span>Help & Support</span>
                         <span>Trust & Safety</span>
-                        <span>Selling on Fiverr</span>
+                        {/* <span>Selling on Fiverr</span>
                         <span> Buying on Fiverr</span>
-                        <span>Fiverr Guides</span>
+                        <span>Fiverr Guides</span> */}
                     </div>
                     <div className="item">
                         <h2>Community</h2>
@@ -52,7 +52,7 @@ const Footer = () => {
                         <span> Become a Seller</span>
                         <span>Community Standards</span>
                     </div>
-                    <div className="item">
+                    {/* <div className="item">
                         <h2>More From Fiverr</h2>
                         <span>Fiverr Enterprise</span>
                         <span> Fiverr Business</span>
@@ -67,15 +67,15 @@ const Footer = () => {
                         <span>Learn</span>
                             Online Courses
                         <span> Working Not Working</span>
-                    </div>
+                    </div> */}
                 </div>
                 <hr />
                 <div className="bottom">
                     <div className="left">
-                        <h2>fiverr</h2>
-                        <span>© Fiverr International Ltd. 2023</span>
+                        <h2>FreelanceConnect</h2>
+                        <span>© FreelanceConnect  Ltd. 2025</span>
                     </div>
-                    <div className="right">
+                    {/* <div className="right">
                         <div className="social">
                             <a href="https://twitter.com/fiverr"> <img src="/images/twitter.png" alt=""  /></a>
                             <a href="https://www.facebook.com/Fiverr/"> <img src="/images/facebook.png" alt=""  /></a>
@@ -93,7 +93,7 @@ const Footer = () => {
                         </div>
                         <img src="/images/accessibility.png" alt="" />
                         
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </div>

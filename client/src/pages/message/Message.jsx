@@ -42,7 +42,7 @@ const Message = () => {
     <div className="message">
       <div className="container">
         <span className="breadcrumbs">
-          <Link to='/messages' className="link" >MESSAGES</Link> &gt { };
+          <Link to='/messages' className="link" >MESSAGES</Link> { };
         </span>
         {isLoading ? "Loading" : error ? "something wnt wrong" : <div className="messages">
           {data.map((m) => (
