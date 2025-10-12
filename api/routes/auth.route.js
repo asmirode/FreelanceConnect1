@@ -5,4 +5,8 @@ router.post('/register',register);
 router.post('/login',login);
 router.post('/logout',logout);
 
+// debug endpoint
+import { checkAuth } from '../controller/auth.controller.js';
+router.get('/check', checkAuth);
+
 export default router;

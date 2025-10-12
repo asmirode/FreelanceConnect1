@@ -8,6 +8,7 @@ import orderRoute from './routes/order.route.js';
 import conversationRoute from './routes/conversation.route.js';
 import messageRoute from './routes/message.route.js';
 import authRoute from './routes/auth.route.js';
+import chatRoute from './routes/chat.route.js';
 import cookieParser from "cookie-parser";
 import cors from 'cors';
 
@@ -35,6 +36,7 @@ app.use('/api/reviews', reviewRoute);
 app.use('/api/orders', orderRoute);
 app.use('/api/conversations', conversationRoute);
 app.use('/api/messages', messageRoute);
+app.use('/api/chat', chatRoute);
 
 
 app.use((err, req, res, next) => {

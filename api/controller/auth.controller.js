@@ -28,16 +28,47 @@ export const login = async (req, res, next) => {
             isSeller: user.isSeller,
         }, process.env.JWT_KEY);
         const { password, ...info } = user._doc;
-        res.cookie("accessToken", token,
-            { httpOnly: true }
-        ).status(200).send(info);
+        // Set cookie options depending on environment so cross-site cookies work in dev and prod
+        const isProd = process.env.NODE_ENV === 'production';
+        const cookieOptions = {
+            httpOnly: true,
+            // In production we need secure cookies and explicit SameSite=None for cross-site requests
+            secure: isProd,
+            sameSite: isProd ? 'none' : 'lax',
+            // set a reasonable maxAge (e.g., 7 days)
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+        };
+
+        res.cookie("accessToken", token, cookieOptions).status(200).send(info);
     } catch (error) {
         next(error);
     }
 }
 export const logout = async (req, res) => {
+    const isProd = process.env.NODE_ENV === 'production';
     res.clearCookie("accessToken", {
-        sameSite: "none",
-        secure: true
+        httpOnly: true,
+        secure: isProd,
+        sameSite: isProd ? 'none' : 'lax'
     }).status(200).send("User has been logout");
+}
+
+// Debug endpoint to check cookie and token
+export const checkAuth = (req, res) => {
+    try {
+        const cookies = req.cookies || {};
+        const token = cookies.accessToken;
+        if (!token) {
+            return res.status(200).json({ hasToken: false, cookies });
+        }
+        let payload = null;
+        try {
+            payload = Jwt.verify(token, process.env.JWT_KEY);
+        } catch (err) {
+            return res.status(200).json({ hasToken: true, valid: false, error: err.message, cookies });
+        }
+        return res.status(200).json({ hasToken: true, valid: true, payload, cookies });
+    } catch (err) {
+        return res.status(500).json({ error: err.message });
+    }
 }
