@@ -390,18 +390,143 @@
       padding: 30px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       border: 1px solid #e0e0e0;
+      margin-top: 30px;
 
       h2 {
-        margin-bottom: 30px;
+        margin-bottom: 10px;
         color: #333;
         font-size: 2rem;
         font-weight: 500;
       }
 
+      .matches-subtitle {
+        color: rgb(61, 61, 61);
+        font-size: 16px;
+        font-weight: 300;
+        margin-bottom: 30px;
+        line-height: 24px;
+        letter-spacing: 0.5px;
+      }
+
       .matches-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(324px, 1fr));
         gap: 25px;
+        justify-items: start;
+
+        .match-card-wrapper {
+          position: relative;
+          width: 324px;
+          display: flex;
+          flex-direction: column;
+          transition: all 0.3s ease;
+
+          &:hover {
+            transform: translateY(-5px);
+          }
+
+          // Wrapper for GigCard with score overlay
+          .gig-card-container {
+            position: relative;
+            width: 100%;
+            margin-bottom: 0;
+
+            // Override GigCard margin and adjust internal spacing
+            .gigCard {
+              margin-bottom: 0;
+              
+              // Hide the price section in GigCard since we show it in the container below
+              .details {
+                display: none; // Hide the entire price section
+              }
+              
+              // Hide the hr line since we removed the price section
+              hr {
+                display: none;
+              }
+            }
+
+            .score-overlay {
+              position: absolute;
+              top: 10px;
+              right: 10px;
+              z-index: 10;
+              pointer-events: none;
+
+              .score-badge {
+                display: inline-block;
+                padding: 6px 12px;
+                border-radius: 20px;
+                color: white;
+                font-weight: 600;
+                font-size: 14px;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+                text-align: center;
+              }
+            }
+          }
+
+          .price-container {
+            width: 100%;
+            margin-top: 12px;
+            padding: 12px 15px;
+            background: #f0f9f4;
+            border-radius: 5px;
+            border: 1px solid #1dbf73;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+
+            .starting-at {
+              font-size: 12px;
+              color: #1dbf73;
+              font-weight: 400;
+              text-transform: uppercase;
+              letter-spacing: 0.5px;
+            }
+
+            .price-value {
+              font-size: 20px;
+              color: #333;
+              font-weight: 500;
+              text-align: center;
+
+              sup {
+                font-size: 14px;
+                vertical-align: super;
+              }
+            }
+          }
+
+          .go-to-gig-btn {
+            width: 100%;
+            margin-top: 12px;
+            padding: 12px 20px;
+            background: #1dbf73;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            box-sizing: border-box;
+
+            &:hover {
+              background: #19a463;
+              transform: translateY(-2px);
+              box-shadow: 0 4px 8px rgba(29, 191, 115, 0.3);
+            }
+
+            &:active {
+              transform: translateY(0);
+            }
+          }
+        }
 
         .match-card {
           background: white;

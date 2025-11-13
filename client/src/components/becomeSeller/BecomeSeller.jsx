@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './becomeseller.scss';
 import newRequest from '../../utils/newRequest';
+import GigCard from '../GigCard/GigCard';
 
 const BecomeSeller = () => {
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ const BecomeSeller = () => {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [messages, matches]);
 
   useEffect(() => {
     // debug: check whether server sees the auth cookie/token
@@ -89,11 +90,38 @@ const BecomeSeller = () => {
         message: inputMessage
       });
 
+      // Debug: log the full response to see all fields
+      // eslint-disable-next-line no-console
+      console.debug('sendMessage response:', res.data);
+
       setMessages(prev => [...prev, res.data.message]);
       setRequirements(res.data.requirements);
 
-      if (res.data.readyToMatch) {
-        setTimeout(() => getMatches(), 1000);
+      // Handle matches returned directly from the endpoint
+      if (res.data.matches && res.data.matches.length > 0) {
+        // eslint-disable-next-line no-console
+        console.debug('Matches received directly from /chat/message:', res.data.matches);
+        setMatches(res.data.matches);
+        
+        // Extract all matched keywords from all matches and add as a chat message
+        const allMatchedKeywords = new Set();
+        res.data.matches.forEach(match => {
+          if (match.reasons && match.reasons.length > 0) {
+            match.reasons.forEach(keyword => allMatchedKeywords.add(keyword));
+          }
+        });
+        
+        if (allMatchedKeywords.size > 0) {
+          const matchedKeywordsMessage = {
+            role: 'bot',
+            content: `Matched on: ${Array.from(allMatchedKeywords).join(', ')}`,
+            timestamp: new Date()
+          };
+          setMessages(prev => [...prev, matchedKeywordsMessage]);
+        }
+      } else {
+        // Clear matches if none returned
+        setMatches([]);
       }
     } catch (error) {
       console.error('Error sending message:', error);
@@ -116,6 +144,9 @@ const BecomeSeller = () => {
     try {
       setLoading(true);
       const res = await newRequest.get(`/chat/matches/${chatId}`);
+      // debug: log server response so we can verify payload shape
+      // eslint-disable-next-line no-console
+      console.debug('BecomeSeller getMatches response:', res.data);
       setMatches(res.data.matches);
       
       const matchMessage = {
@@ -262,57 +293,55 @@ const BecomeSeller = () => {
         </div>
 
         {matches && matches.length > 0 && (
-      <div className="matches-container">
-        <h2>Matched Freelancers</h2>
+          <div className="matches-container">
+            <h2>🎯 Recommended Freelancers</h2>
+            <p className="matches-subtitle">Based on your requirements, here are the best matches:</p>
             <div className="matches-grid">
-              {matches.map((match, index) => (
-                <div key={index} className="match-card">
-                  <div className="match-header">
-                    <img 
-                      src={match.gig.cover || '/images/noavatar.jpg'} 
-                      alt={match.gig.title}
-                    />
-                    <div className="match-score">
-                      <span className="score-value">{match.score}</span>
-                      <span className="score-label">Match Score</span>
+              {matches.map((match, index) => {
+                const gig = match.gig || {};
+                const seller = match.seller || {};
+                const reasons = match.reasons || [];
+                const score = match.score || 0;
+
+                // Only render if we have a valid gig
+                if (!gig._id) {
+                  return null;
+                }
+
+                return (
+                  <div key={gig._id || index} className="match-card-wrapper">
+                    <div className="gig-card-container">
+                      <div className="score-overlay">
+                        <span 
+                          className="score-badge" 
+                          style={{ 
+                            backgroundColor: score > 80 ? '#27ae60' : score > 60 ? '#f39c12' : '#e74c3c' 
+                          }}
+                        >
+                          {score}% match
+                        </span>
+                      </div>
+                      
+                    {/* Use GigCard component for consistent display */}
+                    <GigCard item={gig} sellerOverride={seller} />
                     </div>
-                  </div>
-                  <div className="match-content">
-                    <h3>{match.gig.title}</h3>
-                    <p className="match-desc">{match.gig.shortDesc}</p>
                     
-                    <div className="match-reasons">
-                      {match.matchReasons.map((reason, i) => (
-                        <div key={i} className="reason">
-                          {reason}
-                        </div>
-                      ))}
+                    {/* Price container */}
+                    <div className="price-container">
+                      <span className="starting-at">STARTING AT</span>
+                      <div className="price-value">$ {gig.price}<sup>99</sup></div>
                     </div>
-
-                    <div className="match-stats">
-                      <div className="stat">
-                        <span className="stat-value">⭐ {match.gig.totalStars && match.gig.starNumber ? (match.gig.totalStars / match.gig.starNumber).toFixed(1) : 'N/A'}</span>
-                        <span className="stat-label">Rating</span>
-                      </div>
-                      <div className="stat">
-                        <span className="stat-value">{match.gig.sales || 0}</span>
-                        <span className="stat-label">Sales</span>
-                      </div>
-                      <div className="stat">
-                        <span className="stat-value">${match.gig.price}</span>
-                        <span className="stat-label">Starting at</span>
-                      </div>
-                    </div>
-
+                    
+                    {/* Go to Gig button */}
                     <button 
-                      className="view-gig-btn"
-                      onClick={() => navigate(`/gig/${match.gig._id}`)}
+                      className="go-to-gig-btn"
+                      onClick={() => navigate(`/gig/${gig._id}`)}
                     >
-                      View Gig →
+                      Go to Gig
                     </button>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         )}

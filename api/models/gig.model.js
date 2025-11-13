@@ -66,4 +66,13 @@ const GigSchema = new Schema({
 timestamps:true
 });
 
+// Create a text index to support text search across common searchable fields
+GigSchema.index({
+  title: 'text',
+  desc: 'text',
+  features: 'text',
+  cat: 'text',
+  sortTitle: 'text',
+  sortDesc: 'text'
+});
 export default mongoose.model("Gig",GigSchema)

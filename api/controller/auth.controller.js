@@ -39,7 +39,9 @@ export const login = async (req, res, next) => {
             maxAge: 7 * 24 * 60 * 60 * 1000,
         };
 
-        res.cookie("accessToken", token, cookieOptions).status(200).send(info);
+    // Return the user info and include the token in the JSON body as well
+    // so clients that cannot set cookies (due to browser settings) can still use the token.
+    res.cookie("accessToken", token, cookieOptions).status(200).json({ ...info, accessToken: token });
     } catch (error) {
         next(error);
     }

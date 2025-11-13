@@ -25,6 +25,7 @@ import {
 } from '@tanstack/react-query'
 import BecomeSeller from './components/becomeSeller/BecomeSeller';
 import BecomeSeller2 from './components/becomeSeller2/BecomeSeller2';
+import AIChat from './components/AIChat/AIChat';
 
 function App() {
   const queryClient = new QueryClient();
@@ -100,6 +101,10 @@ function App() {
         {
           path: "/becomeSeller2",
           element: <BecomeSeller2 />
+        },
+        {
+          path: "/ai-chat",
+          element: <AIChat />
         },
       ]
     }
