@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import './resgister.scss';
 import upload from "../../utils/upload";
 import newRequest from "../../utils/newRequest";
@@ -12,14 +12,49 @@ const Register = () => {
     img: "",
     country: "",
     isSeller: false,
-    desc: ""
-  })
+    desc: "",
+    selectedDomain: "",
+    selectedSubdomain: ""
+  });
+  const [skills, setSkills] = useState([]);
+  const [selectedDomain, setSelectedDomain] = useState("");
+  const [selectedSubdomain, setSelectedSubdomain] = useState("");
 
   const navigate = useNavigate();
+
+  // Fetch skills from database
+  useEffect(() => {
+    const fetchSkills = async () => {
+      try {
+        const response = await newRequest.get('/skills');
+        setSkills(response.data);
+      } catch (error) {
+        console.log('Error fetching skills:', error);
+      }
+    };
+    fetchSkills();
+  }, []);
 
   const handlechange = (e) => {
     setUser(prev => {
       return { ...prev, [e.target.name]: e.target.value };
+    })
+  }
+
+  const handleDomainChange = (e) => {
+    const domain = e.target.value;
+    setSelectedDomain(domain);
+    setSelectedSubdomain("");
+    setUser(prev => {
+      return { ...prev, selectedDomain: domain, selectedSubdomain: "" };
+    })
+  }
+
+  const handleSubdomainChange = (e) => {
+    const subdomain = e.target.value;
+    setSelectedSubdomain(subdomain);
+    setUser(prev => {
+      return { ...prev, selectedSubdomain: subdomain };
     })
   }
 
@@ -30,20 +65,40 @@ const Register = () => {
   }
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const url = await upload(file);
+    console.log('Form submitted');
+    console.log('Current user state:', user);
+    console.log('Selected domain:', selectedDomain);
+    console.log('Selected subdomain:', selectedSubdomain);
+    
     try {
-      await newRequest.post('/auth/register', {
+      let url = "";
+      if (file) {
+        console.log('Uploading file...');
+        url = await upload(file);
+        console.log('File uploaded, URL:', url);
+      }
+      
+      const registrationData = {
         ...user,
-        img: url
-      });
-      navigate('/')
+        img: url,
+        skills: selectedSubdomain ? [selectedSubdomain] : []
+      };
+      console.log('Sending registration data:', registrationData);
+      
+      const response = await newRequest.post('/auth/register', registrationData);
+      console.log('Registration response:', response);
+      alert('Registration successful!');
+      navigate('/');
     } catch (error) {
-      console.log(error);
+      console.error('Full error object:', error);
+      console.error('Error response:', error.response);
+      console.error('Error message:', error.message);
+      alert('Registration failed: ' + (error.response?.data || error.message));
     }
   }
 
 
-  return ([
+  return (
     <div className="register">
       <form onSubmit={handleSubmit} >
         <div className="left">
@@ -54,6 +109,7 @@ const Register = () => {
             type="text"
             placeholder="johndoe"
             onChange={handlechange}
+            required
           />
           <label htmlFor="">Email</label>
           <input
@@ -61,12 +117,14 @@ const Register = () => {
             type="email"
             placeholder="email"
             onChange={handlechange}
+            required
           />
           <label htmlFor="">Password</label>
           <input
             name="password"
             type="password"
             onChange={handlechange}
+            required
           />
           <label htmlFor="">Profile Picture</label>
           <input
@@ -81,8 +139,8 @@ const Register = () => {
             type="text"
             placeholder="Usa"
             onChange={handlechange}
+            required
           />
-          <button type="submit">Register</button>
         </div>
         <div className="right">
           <h1>I want to become a seller</h1>
@@ -94,6 +152,41 @@ const Register = () => {
               <span className="slider round"></span>
             </label>
           </div>
+          
+          {user.isSeller && (
+            <>
+              <label htmlFor="">Select Your Domain</label>
+              <select 
+                value={selectedDomain} 
+                onChange={handleDomainChange}
+              >
+                <option value="">-- Choose a Domain --</option>
+                {skills.map(skill => (
+                  <option key={skill._id} value={skill.domain}>
+                    {skill.domain}
+                  </option>
+                ))}
+              </select>
+
+              {selectedDomain && (
+                <>
+                  <label htmlFor="">Select Your Skill</label>
+                  <select 
+                    value={selectedSubdomain} 
+                    onChange={handleSubdomainChange}
+                  >
+                    <option value="">-- Choose a Skill --</option>
+                    {skills.find(s => s.domain === selectedDomain)?.subdomains.map((subdomain, index) => (
+                      <option key={index} value={subdomain}>
+                        {subdomain}
+                      </option>
+                    ))}
+                  </select>
+                </>
+              )}
+            </>
+          )}
+
           <label htmlFor="">Phone Number</label>
           <input
             name="phone"
@@ -110,9 +203,10 @@ const Register = () => {
             rows="10"
             onChange={handlechange}
           ></textarea>
+          <button type="submit">Register</button>
         </div>
       </form>
     </div>
-  ]);
+  );
 }
 export default Register;
