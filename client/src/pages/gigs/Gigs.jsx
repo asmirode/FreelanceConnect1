@@ -35,9 +35,9 @@ const Gigs = () => {
     return ([
         <div className="gigs">
             <div className="container">
-                {/* <span className="breadcrumbs">FIVERR &gt; GRAPHICS & DESIGN &gt;</span> */}
-                {/* <h1>design</h1>
-                <p>Explore the boundaries of art and technology with Fiverr's AI artists</p> */}
+                <span className="breadcrumbs">FIVERR &gt; GRAPHICS & DESIGN &gt;</span>
+                <h1>design</h1>
+                <p>Explore the boundaries of art and technology with Fiverr's AI artists</p>
                 <div className="menu">
                     <div className="left">
                         <span>Budget</span>
