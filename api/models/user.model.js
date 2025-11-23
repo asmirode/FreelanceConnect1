@@ -28,10 +28,6 @@ const userSchema = new Schema({
     type:String,
     require:false,
   },
-  password:{
-    type:String,
-    require:true,
-  },
   desc:{
     type:String,
     require:false,
@@ -44,6 +40,14 @@ const userSchema = new Schema({
   verified:{
     type:Boolean,
     default:false,
+  },
+  selectedDomain:{
+    type:String,
+    require:false,
+  },
+  skills:{
+    type:[String],
+    require:false,
   },
 },{
 timestamps:true

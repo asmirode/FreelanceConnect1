@@ -55,6 +55,7 @@ const Navbar = () => {
                     </div>
                 </div>} */}
                 <div className="links">
+                    <span onClick={()=>navigate('/ai-upskilling')}>AI Upskilling</span>
                     <span onClick={()=>navigate('/becomeseller')}>AI Matching</span>
                     {/* <span className="tooltip ">Explore
                         <span className="tooltiptext">
