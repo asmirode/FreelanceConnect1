@@ -7,111 +7,163 @@ const AiUpskilling = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
-  const [domain, setDomain] = useState(null);
+  const [skills, setSkills] = useState([]);
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('currentUser'));
     setCurrentUser(user);
-    
-    if (user?.selectedDomain) {
-      setDomain(user.selectedDomain);
-      fetchCourseSuggestions(user.selectedDomain);
+
+    // Get user skills from either skills array or selectedDomain
+    const userSkills = Array.isArray(user?.skills) && user.skills.length > 0
+      ? user.skills
+      : (user?.selectedDomain ? [user.selectedDomain] : []);
+
+    setSkills(userSkills);
+
+    // Auto-fetch if user is seller and has skills
+    if (user?.isSeller && userSkills.length > 0) {
+      fetchCourseSuggestions(userSkills);
     }
   }, []);
 
-  const fetchCourseSuggestions = async (selectedDomain) => {
+  const fetchCourseSuggestions = async (selectedSkills) => {
     setLoading(true);
     setError(null);
+    setCourses([]);
+    
     try {
-      console.log('Fetching courses for domain:', selectedDomain);
+      console.log('Fetching AI course recommendations for skills:', selectedSkills);
+      
       const response = await newRequest.post('/upskilling/courses', {
-        domain: selectedDomain
+        skills: selectedSkills
       });
-      console.log('Response received:', response.data);
-      setCourses(response.data.courses);
+      
+      console.log('AI recommendations received:', response.data);
+      setCourses(response.data.courses || []);
+      
     } catch (err) {
-      console.error('Full error object:', err);
-      console.error('Error status:', err.response?.status);
-      console.error('Error data:', err.response?.data);
-      console.error('Error message:', err.message);
-      setError('Failed to load course suggestions. Error: ' + (err.response?.data || err.message));
+      console.error('Error fetching course suggestions:', err);
+      
+      let errorMessage = 'Failed to load AI course suggestions. ';
+      
+      if (err.response?.status === 429) {
+        errorMessage += 'Rate limit exceeded. Please try again in a few minutes.';
+      } else if (err.response?.status === 500) {
+        errorMessage += 'AI service temporarily unavailable. Please try again later.';
+      } else if (err.response?.data) {
+        errorMessage += err.response.data;
+      } else {
+        errorMessage += err.message;
+      }
+      
+      setError(errorMessage);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleRetry = () => {
+    if (skills.length > 0) {
+      fetchCourseSuggestions(skills);
     }
   };
 
   return (
     <div className='ai-upskilling'>
       <div className='ai-upskilling-container'>
-        <h1>AI Upskilling</h1>
-        <p>Personalized course recommendations based on your professional domain</p>
-        
+        <div className='header'>
+          <h1>🤖 AI-Powered Upskilling</h1>
+          <p>Get personalized course recommendations powered by artificial intelligence</p>
+        </div>
+
         <div className='ai-upskilling-content'>
           {!currentUser?.isSeller ? (
             <div className='ai-intro'>
               <h2>Become a Seller First</h2>
               <p>
-                To get personalized course recommendations, you need to create a seller account first.
-                This allows us to understand your professional domain and suggest relevant courses.
+                To get AI-powered course recommendations, you need to create a seller account and add your skills.
+              </p>
+              <p>
+                Our AI will analyze your skills and suggest the best courses to help you grow professionally.
+              </p>
+            </div>
+          ) : !skills || skills.length === 0 ? (
+            <div className='ai-intro'>
+              <h2>Add Your Skills</h2>
+              <p>
+                Please add your skills to your profile to get personalized AI course recommendations.
               </p>
             </div>
           ) : (
             <>
               <div className='ai-intro'>
-                <h2>Recommended Courses for {domain}</h2>
+                <h2>AI Recommendations for: {skills.join(', ')}</h2>
                 <p>
-                  Based on your expertise in <strong>{domain}</strong>, here are carefully curated courses and certifications
-                  to enhance your skills and stay competitive in your field.
+                  Our AI has analyzed your skills and curated these courses to enhance your expertise.
                 </p>
               </div>
 
               {loading && (
                 <div className='loading'>
+                  <div className='loading-spinner'></div>
                   <p>🤖 AI is generating personalized course recommendations...</p>
+                  <p className='loading-subtext'>This may take a few seconds</p>
                 </div>
               )}
 
               {error && (
                 <div className='error-message'>
-                  <p>{error}</p>
+                  <p>❌ {error}</p>
+                  <button className='retry-btn' onClick={handleRetry}>
+                    🔄 Retry
+                  </button>
                 </div>
               )}
 
-              {!loading && courses.length > 0 && (
-                <div className='courses-container'>
-                  {courses.map((course, index) => (
-                    <div key={index} className='course-card'>
-                      {course.rawResponse ? (
-                        <div className='course-content'>
-                          <p>{course.content}</p>
-                        </div>
-                      ) : (
-                        <>
+              {!loading && !error && courses.length > 0 && (
+                <>
+                  <div className='results-header'>
+                    <h3>✨ {courses.length} AI-Recommended Courses</h3>
+                  </div>
+                  <div className='courses-container'>
+                    {courses.map((course) => (
+                      <div key={course.id} className='course-card'>
+                        <div className='course-header'>
                           <h3>{course.courseName}</h3>
-                          <div className='course-meta'>
-                            <span className='platform'>📚 {course.platform}</span>
-                            <span className='duration'>⏱️ {course.duration}</span>
+                        </div>
+                        <div className='course-meta'>
+                          <span className='platform'>📚 {course.platform}</span>
+                          <span className='duration'>⏱️ {course.duration}</span>
+                        </div>
+                        <p className='description'>{course.description}</p>
+                        <div className='skills'>
+                          <strong>Key Skills You'll Learn:</strong>
+                          <div className='skill-tags'>
+                            {Array.isArray(course.keySkills) && course.keySkills.map((skill, i) => (
+                              <span key={i} className='skill-tag'>
+                                {skill}
+                              </span>
+                            ))}
                           </div>
-                          <p className='description'>{course.description}</p>
-                          <div className='skills'>
-                            <strong>Key Skills:</strong>
-                            <div className='skill-tags'>
-                              {Array.isArray(course.keySkills) && course.keySkills.map((skill, i) => (
-                                <span key={i} className='skill-tag'>{skill}</span>
-                              ))}
-                            </div>
-                          </div>
-                        </>
-                      )}
-                    </div>
-                  ))}
-                </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className='regenerate-section'>
+                    <button className='regenerate-btn' onClick={handleRetry}>
+                      🔄 Generate New Recommendations
+                    </button>
+                  </div>
+                </>
               )}
 
-              {!loading && courses.length === 0 && !error && (
-                <button className='retry-btn' onClick={() => fetchCourseSuggestions(domain)}>
-                  Generate Course Suggestions
-                </button>
+              {!loading && !error && courses.length === 0 && (
+                <div className='no-results'>
+                  <p>No course recommendations yet.</p>
+                  <button className='retry-btn' onClick={handleRetry}>
+                    🚀 Generate AI Recommendations
+                  </button>
+                </div>
               )}
             </>
           )}
@@ -122,3 +174,4 @@ const AiUpskilling = () => {
 };
 
 export default AiUpskilling;
+// filepath: c:\Users\HP\OneDrive\Desktop\Ly project code\FreelanceConnect1\client\src\pages\aiUpskilling\AiUpskilling.jsx

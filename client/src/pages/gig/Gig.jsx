@@ -32,7 +32,7 @@ const Gig = () => {
             {isLoading ? <div className="loader"></div> : error ? <h4>Something Went Wrong</h4> :
                 <div className="container">
                     <div className="left">
-                        <span className="breadcrumbs">FIVERR &gt; GRAPHICS & DESIGN &gt;</span>
+                        {/* <span className="breadcrumbs">FIVERR &gt; GRAPHICS & DESIGN &gt;</span> */}
                         <h1>{data.title}</h1>
                         {isLoadingUser ? "loading" : errorUser ? "something gone wrong" : 
                         <div className="user">

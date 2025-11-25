@@ -1,228 +1,52 @@
 import axios from 'axios';
 import createError from '../utils/createError.js';
 
-// Mock course data for different domains
+// Fallback courses database
 const coursesDatabase = {
-  'Web Development': [
+  "Full-Stack Development": [
     {
-      courseName: 'The Complete Web Developer Bootcamp 2024',
-      platform: 'Udemy',
-      duration: '50 hours',
-      description: 'Learn full-stack web development with HTML, CSS, JavaScript, Node.js, and React. Build real-world projects.',
-      keySkills: ['HTML/CSS', 'JavaScript', 'React', 'Node.js', 'Databases']
+      courseName: "The Complete Web Developer Bootcamp 2024",
+      platform: "Udemy",
+      duration: "50 hours",
+      description: "Master HTML, CSS, JavaScript, Node, React, MongoDB and more!",
+      keySkills: ["HTML/CSS", "JavaScript", "React", "Node.js", "MongoDB"]
     },
     {
-      courseName: 'Web Design for Beginners',
-      platform: 'Coursera',
-      duration: '4 weeks',
-      description: 'Master the principles of web design and create beautiful, responsive websites.',
-      keySkills: ['UX/UI Design', 'Responsive Design', 'Web Standards', 'Accessibility']
+      courseName: "Full Stack Open 2024",
+      platform: "University of Helsinki",
+      duration: "12 weeks",
+      description: "Deep dive into modern web development with React, Redux, Node.js, MongoDB, GraphQL and TypeScript",
+      keySkills: ["React", "Redux", "Node.js", "MongoDB", "GraphQL", "TypeScript"]
     },
     {
-      courseName: 'Advanced JavaScript Patterns',
-      platform: 'Pluralsight',
-      duration: '8 hours',
-      description: 'Deep dive into advanced JavaScript concepts and design patterns used in production code.',
-      keySkills: ['Advanced JavaScript', 'Design Patterns', 'Performance', 'Security']
+      courseName: "The Odin Project - Full Stack JavaScript",
+      platform: "The Odin Project",
+      duration: "Self-paced",
+      description: "Free full curriculum for learning web development",
+      keySkills: ["JavaScript", "React", "Node.js", "Express", "PostgreSQL"]
     },
     {
-      courseName: 'React Advanced Topics',
-      platform: 'LinkedIn Learning',
-      duration: '6 hours',
-      description: 'Learn advanced React patterns including hooks, context, and performance optimization.',
-      keySkills: ['React Hooks', 'State Management', 'Testing', 'Performance Optimization']
+      courseName: "Node.js, Express & MongoDB Bootcamp",
+      platform: "Udemy",
+      duration: "42 hours",
+      description: "Master Node by building a real-world RESTful API",
+      keySkills: ["Node.js", "Express", "MongoDB", "REST API", "JWT"]
     },
     {
-      courseName: 'Backend Development with Node.js',
-      platform: 'Udemy',
-      duration: '40 hours',
-      description: 'Build scalable backend applications using Node.js and Express with databases.',
-      keySkills: ['Node.js', 'Express', 'REST APIs', 'Databases', 'Authentication']
+      courseName: "Advanced React and Redux",
+      platform: "Udemy",
+      duration: "24 hours",
+      description: "Master React Router, Webpack, Redux, and more",
+      keySkills: ["React", "Redux", "Webpack", "Testing", "Hooks"]
     }
   ],
-  'Mobile App Development': [
+  "Web Development": [
     {
-      courseName: 'React Native: Build Native Mobile Apps',
-      platform: 'Udemy',
-      duration: '55 hours',
-      description: 'Learn to build iOS and Android apps using React Native and JavaScript.',
-      keySkills: ['React Native', 'Mobile UI', 'State Management', 'APIs', 'Deployment']
-    },
-    {
-      courseName: 'Flutter App Development Complete Guide',
-      platform: 'Udemy',
-      duration: '45 hours',
-      description: 'Master Flutter to build beautiful cross-platform mobile applications.',
-      keySkills: ['Flutter', 'Dart', 'UI Design', 'State Management', 'Firebase']
-    },
-    {
-      courseName: 'iOS App Development with Swift',
-      platform: 'Coursera',
-      duration: '6 weeks',
-      description: 'Learn to develop native iOS applications using Swift and Xcode.',
-      keySkills: ['Swift', 'iOS Development', 'UIKit', 'Networking', 'Core Data']
-    },
-    {
-      courseName: 'Android Development Master Course',
-      platform: 'Udemy',
-      duration: '50 hours',
-      description: 'Complete guide to Android app development using Kotlin and Android Studio.',
-      keySkills: ['Kotlin', 'Android Studio', 'Material Design', 'APIs', 'Testing']
-    },
-    {
-      courseName: 'Mobile App Security & Performance',
-      platform: 'Pluralsight',
-      duration: '10 hours',
-      description: 'Learn to build secure and performant mobile applications.',
-      keySkills: ['Security', 'Performance Optimization', 'Data Protection', 'Testing']
-    }
-  ],
-  'UI/UX Design': [
-    {
-      courseName: 'Complete UI/UX Design Course',
-      platform: 'Udemy',
-      duration: '35 hours',
-      description: 'Learn user interface and user experience design from scratch.',
-      keySkills: ['Wireframing', 'Prototyping', 'User Research', 'Visual Design', 'Usability']
-    },
-    {
-      courseName: 'Figma Mastery: Web & App Design',
-      platform: 'Skillshare',
-      duration: '8 hours',
-      description: 'Master Figma to design websites and mobile applications professionally.',
-      keySkills: ['Figma', 'Component Design', 'Prototyping', 'Design Systems', 'Collaboration']
-    },
-    {
-      courseName: 'User Research & User Testing',
-      platform: 'Coursera',
-      duration: '5 weeks',
-      description: 'Learn techniques to research users and validate design decisions.',
-      keySkills: ['User Research', 'User Testing', 'Analytics', 'Insights', 'Documentation']
-    },
-    {
-      courseName: 'Design Systems & Component Libraries',
-      platform: 'LinkedIn Learning',
-      duration: '5 hours',
-      description: 'Create scalable design systems and component libraries for large projects.',
-      keySkills: ['Design Systems', 'Component Design', 'Documentation', 'Governance']
-    },
-    {
-      courseName: 'Interaction Design & Motion',
-      platform: 'Udemy',
-      duration: '20 hours',
-      description: 'Master interaction design and micro-animations to enhance user experiences.',
-      keySkills: ['Interaction Design', 'Animation', 'Micro-interactions', 'Prototyping']
-    }
-  ],
-  'Photography & Retouching': [
-    {
-      courseName: 'Photography Fundamentals & Composition',
-      platform: 'Udemy',
-      duration: '25 hours',
-      description: 'Learn photography basics, composition, lighting, and camera settings.',
-      keySkills: ['Composition', 'Lighting', 'Exposure', 'Camera Settings', 'Post-processing']
-    },
-    {
-      courseName: 'Adobe Lightroom Mastery',
-      platform: 'Skillshare',
-      duration: '6 hours',
-      description: 'Master Lightroom for efficient photo organization and editing workflows.',
-      keySkills: ['Lightroom', 'Color Correction', 'Batch Editing', 'Organization', 'Presets']
-    },
-    {
-      courseName: 'Photoshop for Retouching',
-      platform: 'Udemy',
-      duration: '30 hours',
-      description: 'Learn advanced Photoshop techniques for professional photo retouching.',
-      keySkills: ['Photoshop', 'Retouching', 'Color Grading', 'Compositing', 'Restoration']
-    },
-    {
-      courseName: 'Portrait Photography Masterclass',
-      platform: 'Coursera',
-      duration: '4 weeks',
-      description: 'Specialize in portrait photography with lighting and posing techniques.',
-      keySkills: ['Portrait Photography', 'Lighting Setup', 'Posing', 'Client Relations']
-    },
-    {
-      courseName: 'Advanced Color Grading & Retouching',
-      platform: 'LinkedIn Learning',
-      duration: '7 hours',
-      description: 'Learn professional color grading and advanced retouching techniques.',
-      keySkills: ['Color Grading', 'Advanced Retouching', 'LUTs', 'Skin Retouching']
-    }
-  ],
-  'Graphic Design': [
-    {
-      courseName: 'Complete Graphic Design Course',
-      platform: 'Udemy',
-      duration: '40 hours',
-      description: 'Learn design principles, typography, color theory, and professional design tools.',
-      keySkills: ['Design Principles', 'Typography', 'Color Theory', 'Branding', 'Layout']
-    },
-    {
-      courseName: 'Adobe Creative Suite Mastery',
-      platform: 'Skillshare',
-      duration: '12 hours',
-      description: 'Master Adobe InDesign, Illustrator, and Photoshop for professional design work.',
-      keySkills: ['InDesign', 'Illustrator', 'Photoshop', 'Print Design', 'Digital Design']
-    },
-    {
-      courseName: 'Logo Design & Brand Identity',
-      platform: 'Udemy',
-      duration: '20 hours',
-      description: 'Learn to create memorable logos and comprehensive brand identity systems.',
-      keySkills: ['Logo Design', 'Branding', 'Visual Identity', 'Brand Guidelines', 'Design Thinking']
-    },
-    {
-      courseName: 'Typography for Designers',
-      platform: 'Coursera',
-      duration: '5 weeks',
-      description: 'Master typography principles and their application in modern design.',
-      keySkills: ['Typography', 'Font Pairing', 'Hierarchy', 'Readability', 'Type Design']
-    },
-    {
-      courseName: 'Print & Packaging Design',
-      platform: 'LinkedIn Learning',
-      duration: '8 hours',
-      description: 'Learn to design print materials and packaging that stands out on shelves.',
-      keySkills: ['Print Design', 'Packaging', 'Die-cutting', 'Color Separation', 'Production']
-    }
-  ],
-  'Digital Marketing': [
-    {
-      courseName: 'Complete Digital Marketing Course',
-      platform: 'Udemy',
-      duration: '35 hours',
-      description: 'Learn all aspects of digital marketing including SEO, social media, and analytics.',
-      keySkills: ['SEO', 'SEM', 'Social Media Marketing', 'Email Marketing', 'Analytics']
-    },
-    {
-      courseName: 'Google Analytics & Data Analysis',
-      platform: 'Coursera',
-      duration: '4 weeks',
-      description: 'Master Google Analytics to measure and optimize marketing campaigns.',
-      keySkills: ['Google Analytics', 'Data Analysis', 'Reporting', 'Optimization', 'Tracking']
-    },
-    {
-      courseName: 'Social Media Marketing Strategies',
-      platform: 'LinkedIn Learning',
-      duration: '6 hours',
-      description: 'Learn to create effective social media strategies for different platforms.',
-      keySkills: ['Social Media Strategy', 'Content Creation', 'Community Management', 'Analytics']
-    },
-    {
-      courseName: 'Content Marketing & SEO',
-      platform: 'Udemy',
-      duration: '25 hours',
-      description: 'Master content creation and SEO strategies for organic traffic growth.',
-      keySkills: ['Content Strategy', 'Keyword Research', 'SEO', 'Copywriting', 'Link Building']
-    },
-    {
-      courseName: 'PPC Advertising & Conversion Optimization',
-      platform: 'Skillshare',
-      duration: '8 hours',
-      description: 'Learn Google Ads, Facebook Ads, and conversion rate optimization techniques.',
-      keySkills: ['Google Ads', 'Facebook Ads', 'CRO', 'A/B Testing', 'Campaign Management']
+      courseName: "Modern JavaScript From The Beginning",
+      platform: "Udemy",
+      duration: "21 hours",
+      description: "Learn and build projects with pure JavaScript",
+      keySkills: ["JavaScript", "ES6+", "DOM", "Async/Await", "APIs"]
     }
   ]
 };
@@ -230,7 +54,7 @@ const coursesDatabase = {
 export const testEndpoint = async (req, res, next) => {
   try {
     console.log('Test endpoint called');
-    res.status(200).send({ message: 'Test endpoint working', domain: req.body.domain });
+    res.status(200).send({ message: 'Test endpoint working', payload: req.body });
   } catch (error) {
     console.error('Test error:', error);
     next(error);
@@ -239,28 +63,134 @@ export const testEndpoint = async (req, res, next) => {
 
 export const getCourseSuggestions = async (req, res, next) => {
   try {
-    const { domain } = req.body;
-    console.log('=== getCourseSuggestions called ===');
-    console.log('Domain:', domain);
+    const { skills } = req.body;
 
-    if (!domain) {
-      console.log('No domain provided');
-      return next(createError(400, 'Domain is required'));
+    if (!skills || !Array.isArray(skills) || skills.length === 0) {
+      console.error('❌ Invalid skills input:', skills);
+      return next(createError(400, 'Skills array is required and cannot be empty'));
     }
 
-    // Get courses from database or return default
-    const courses = coursesDatabase[domain] || coursesDatabase['Web Development'];
+    console.log('🚀 Fetching course suggestions for skills:', skills);
 
-    console.log('Returning', courses.length, 'courses for domain:', domain);
-    res.status(200).send({
-      domain,
-      courses,
-      message: 'Courses suggested based on your domain'
+    // Try Gemini AI
+    if (process.env.GEMINI_API_KEY) {
+      try {
+        console.log('🤖 Listing available models first...');
+        
+        // First, list available models
+        const modelsResponse = await axios.get(
+          `https://generativelanguage.googleapis.com/v1/models?key=${process.env.GEMINI_API_KEY}`,
+          { timeout: 10000 }
+        );
+
+        const availableModels = modelsResponse.data.models
+          .filter(m => m.supportedGenerationMethods?.includes('generateContent'))
+          .map(m => m.name.replace('models/', ''));
+
+        console.log('✅ Available models:', availableModels.join(', '));
+
+        // Try each available model
+        for (const modelName of availableModels) {
+          try {
+            console.log(`📤 Trying model: ${modelName}...`);
+            
+            const skillsList = skills.join(', ');
+            const prompt = `As an expert career advisor, suggest exactly 5 high-quality online courses for someone with these skills: ${skillsList}
+
+Return ONLY a JSON array in this exact format (no markdown, no explanation):
+[
+  {
+    "courseName": "Course Title",
+    "platform": "Udemy or Coursera or edX",
+    "duration": "X hours",
+    "description": "Brief 2-3 sentence description",
+    "keySkills": ["skill1", "skill2", "skill3"]
+  }
+]`;
+
+            const geminiResponse = await axios.post(
+              `https://generativelanguage.googleapis.com/v1/models/${modelName}:generateContent?key=${process.env.GEMINI_API_KEY}`,
+              {
+                contents: [{
+                  parts: [{
+                    text: prompt
+                  }]
+                }]
+              },
+              {
+                headers: { 'Content-Type': 'application/json' },
+                timeout: 30000
+              }
+            );
+
+            console.log(`✅ Success with model: ${modelName}`);
+
+            // Extract and parse
+            const aiContent = geminiResponse.data.candidates[0].content.parts[0].text.trim();
+            
+            let cleanedContent = aiContent
+              .replace(/```json\s*/g, '')
+              .replace(/```\s*/g, '')
+              .replace(/^[^[{]*/, '')
+              .replace(/[^}\]]*$/, '')
+              .trim();
+
+            let courses = JSON.parse(cleanedContent);
+            if (!Array.isArray(courses)) courses = [courses];
+
+            console.log(`✅ Gemini returned ${courses.length} courses`);
+
+            const normalizedCourses = courses.slice(0, 5).map((course, index) => ({
+              id: `gemini-${Date.now()}-${index}`,
+              courseName: course.courseName || course.title || 'Untitled Course',
+              platform: course.platform || 'Online Platform',
+              duration: course.duration || 'Self-paced',
+              description: course.description || 'No description',
+              keySkills: Array.isArray(course.keySkills) ? course.keySkills : []
+            }));
+
+            return res.status(200).send({
+              skills,
+              courses: normalizedCourses,
+              message: `🤖 AI-generated recommendations using ${modelName}`,
+              source: `Google Gemini AI (${modelName})`
+            });
+
+          } catch (modelError) {
+            console.log(`⚠️ Model ${modelName} failed:`, modelError.response?.data?.error?.message || modelError.message);
+            continue; // Try next model
+          }
+        }
+
+        console.log('⚠️ All available models failed');
+
+      } catch (geminiError) {
+        console.error('⚠️ Gemini API Error:', geminiError.message);
+      }
+    }
+
+    // Fallback to cached
+    console.log('📦 Using cached courses...');
+    const primarySkill = skills[0];
+    const courses = coursesDatabase[primarySkill] || coursesDatabase["Full-Stack Development"] || [];
+    
+    const normalizedCourses = courses.map((course, index) => ({
+      id: `cache-${Date.now()}-${index}`,
+      ...course
+    }));
+
+    console.log(`✅ Returning ${normalizedCourses.length} cached courses`);
+
+    return res.status(200).send({
+      skills,
+      courses: normalizedCourses,
+      message: 'Curated course recommendations based on your skills',
+      source: 'Expert-Curated Database'
     });
 
   } catch (error) {
-    console.error('=== ERROR IN getCourseSuggestions ===');
-    console.error('Error message:', error.message);
-    next(createError(500, `Failed to generate course suggestions: ${error.message}`));
+    console.error('❌ FATAL ERROR:', error);
+    next(createError(500, `Failed to fetch suggestions: ${error.message}`));
   }
 };
+// filepath: c:\Users\HP\OneDrive\Desktop\Ly project code\FreelanceConnect1\api\controller\upskilling.controller.js
