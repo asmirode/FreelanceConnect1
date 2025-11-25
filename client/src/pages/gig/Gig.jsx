@@ -108,31 +108,44 @@ const Gig = () => {
                        <Reviews gigId={id} key={id}></Reviews>
                     </div>
                     <div className="right">
-                        <div className="price">
-                            <h3>{data.sortTitle}</h3>
-                            <h2>${data.price}</h2>
-                        </div>
-                        <p>{data.sortDesc}</p>
-                        <div className="details">
-                            <div className="item">
-                                <img src="/images/clock.png" alt="" />
-                                <span>{data.deliveryTime} days Delivery</span>
+                        <div className="card">
+                            <img src={data.cover} alt="" />
+                            <div className="info">
+                                {isLoadingUser ? "loading" : errorUser ? "something wrong" : <div className="user">
+                                    <img src={dataUser.img || '/images/noavtar.jpeg'} alt="" />
+                                    <span>{dataUser.username}</span>
+                                </div>}
+                                <h3>{data.title}</h3>
+                                <p>{data.desc}</p>
+                                <div className="star">
+                                    <img src="/images/star.png" alt="" />
+                                    <span>
+                                        {!isNaN(data.totalStars / data.starNumber) &&
+                                            Math.round(data.totalStars / data.starNumber)}
+                                    </span>
+                                </div>
+                                <div className="details-info">
+                                    <div className="item">
+                                        <img src="/images/clock.png" alt="" />
+                                        <span>{data.deliveryTime} days Delivery</span>
+                                    </div>
+                                    <div className="item">
+                                        <img src="/images/recycle.png" alt="" />
+                                        <span>{data.rivisonNumber} Revisions</span>
+                                    </div>
+                                </div>
                             </div>
-                            <div className="item">
-                                <img src="/images/recycle.png" alt="" />
-                                <span>{data.rivisonNumber} Revisoins</span>
+                            <hr />
+                            <div className="details">
+                                <img src="/images/heart.png" alt="" />
+                                <div className="price">
+                                    <span>STARTING AT</span>
+                                    <h2>$ {data.price}<sup>99</sup></h2>
+                                </div>
                             </div>
-                        </div>
-                        <div className="features">
-                            {data.features.map((feature) =>
-
-                                <div className="item" key={feature}>
-                                    <img src="/images/greencheck.png" alt="" />
-                                    <span>{feature} </span>
-                                </div>)}
                         </div>
                         <Link to={`/pay/${id}`}>
-                        <button>Continue</button>
+                            <button>Continue</button>
                         </Link>
                     </div>
                 </div>}

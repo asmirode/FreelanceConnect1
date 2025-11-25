@@ -62,7 +62,7 @@ const Navbar = () => {
                             <div className="col">
                                 <div className="item_tooltip">
                                     <h4 className='item_tooltip_header'>Discover</h4>
-                                    <p className='item_tooltip_desc'>Inspiring projects made on Fiverr</p>
+                                    <p className='item_tooltip_desc'>Inspiring projects made on FreelanceConnect</p>
                                 </div>
                                 <div className="item_tooltip">
                                     <h4 className='item_tooltip_header'>Guides</h4>
@@ -81,7 +81,7 @@ const Navbar = () => {
                             <div className="col">
                                 <div className="item_tooltip">
                                     <h4 className='item_tooltip_header'>Community</h4>
-                                    <p className='item_tooltip_desc'>Connect with Fiverr’s team and community</p>
+                                    <p className='item_tooltip_desc'>Connect with FreelanceConnect's team and community</p>
                                 </div>
                                 <div className="item_tooltip">
                                     <h4 className='item_tooltip_header'>Podcast</h4>
@@ -92,7 +92,7 @@ const Navbar = () => {
                                     <p className='item_tooltip_desc'>News, information and community stories</p>
                                 </div>
                                 <div className="item_tooltip">
-                                    <h4 className='item_tooltip_header'>Fiverr Workspace</h4>
+                                    <h4 className='item_tooltip_header'>FreelanceConnect Workspace</h4>
                                     <p className='item_tooltip_desc'>One place to manage your business</p>
                                 </div>
                             </div>

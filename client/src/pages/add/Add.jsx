@@ -1,4 +1,4 @@
-import React, { useReducer, useState } from "react";
+import React, { useReducer, useState, useEffect } from "react";
 import './add.scss';
 import { INITIAL_STATE, gigReducer } from "../../reducers/gigReducers";
 import upload from '../../utils/upload.js';
@@ -9,12 +9,33 @@ const Add = () => {
     const [singleFile, setsingleFile] = useState(undefined);
     const [files, setFiles] = useState([]);
     const [uploading, setUploading] = useState(false);
+    const [domains, setDomains] = useState([]);
+    const [loadingDomains, setLoadingDomains] = useState(true);
     const [state, dispatch] = useReducer(gigReducer, INITIAL_STATE);
+
+    // Fetch domains from skills collection
+    useEffect(() => {
+        const fetchDomains = async () => {
+            try {
+                const response = await newRequest.get("/skills");
+                if (response.data && Array.isArray(response.data)) {
+                    const domainList = response.data.map(skill => skill.domain);
+                    setDomains(domainList);
+                }
+            } catch (error) {
+                console.error("Error fetching domains:", error);
+            } finally {
+                setLoadingDomains(false);
+            }
+        };
+        fetchDomains();
+    }, []);
 
     const handlechange = (e) => {
         dispatch({
             type: "CHANGE_INPUT", payload: {
-                name: e.target.name, value: e.target.value
+                name: e.target.name === "domain" ? "cat" : e.target.name, 
+                value: e.target.value
             }
         })
     }
@@ -75,11 +96,12 @@ const Add = () => {
                             placeholder="e.g. I will do something I'm really good at"
                             onChange={handlechange}
                         />
-                        <select name="cat" id="cat" onChange={handlechange}>
-                            <option value="Design">Design</option>
-                            <option value="Web developer">Web Developer</option>
-                            <option value="Animation">Animation</option>
-                            <option value="Music">Music</option>
+                        <label htmlFor="">Domain</label>
+                        <select name="domain" id="domain" onChange={handlechange} disabled={loadingDomains}>
+                            <option value="">Select a domain</option>
+                            {domains.map((domain, index) => (
+                                <option key={index} value={domain}>{domain}</option>
+                            ))}
                         </select>
                         <div className="images">
                             <div className="imagesInputs">

@@ -53,16 +53,16 @@ const Footer = () => {
                         <span>Community Standards</span>
                     </div>
                     {/* <div className="item">
-                        <h2>More From Fiverr</h2>
-                        <span>Fiverr Enterprise</span>
-                        <span> Fiverr Business</span>
-                        <span>Fiverr Pro</span>
-                        <span> Fiverr Logo Maker</span>
+                        <h2>More From FreelanceConnect</h2>
+                        <span>FreelanceConnect Enterprise</span>
+                        <span> FreelanceConnect Business</span>
+                        <span>FreelanceConnect Pro</span>
+                        <span> FreelanceConnect Logo Maker</span>
                         <span> Get Inspired </span>
-                        <span>Fiverr Select</span>
+                        <span>FreelanceConnect Select</span>
                         <span>ClearVoice</span>
                             Content Marketing
-                        <span>Fiverr Workspace</span>
+                        <span>FreelanceConnect Workspace</span>
                             Invoice Software
                         <span>Learn</span>
                             Online Courses
