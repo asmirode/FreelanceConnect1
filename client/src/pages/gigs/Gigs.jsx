@@ -64,7 +64,7 @@ const Gigs = () => {
                         : error
                             ? <h4 style={{color:"red"}}>Something Gone Wrong</h4>
                             : data.length === 0 ?
-                                <h4 style={{color:"#d9480f"}}>no found</h4> :
+                                <h4 style={{color:"#d9480f"}}> Gigs not found !</h4> :
                                 data.map((gig) => <GigCard key={gig._id} item={gig} />)
                     }
                 </div>

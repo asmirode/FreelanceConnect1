@@ -154,15 +154,15 @@ const Home = () => {
                             <img src="/images/check.png" alt="check" />
                             Dedicated account management
                         </div>
-                        <div className="title">
+                        {/* <div className="title">
                             <img src="/images/check.png" alt="check" />
                             Team collaboration tools
-                        </div>
+                        </div> */}
                         <div className="title">
                             <img src="/images/check.png" alt="check" />
-                            Business payment solutions
+                            Business solutions
                         </div>
-                        <button>Explore Fiverr Business</button>
+                        <button>Explore FreelanceConnect AI Matching </button>
                     </div>
                     <div className="item">
                         <img src="images/business-desktop-870-x1.webp" alt="imagea" />
