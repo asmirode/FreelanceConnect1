@@ -35,9 +35,9 @@ const Gigs = () => {
     return ([
         <div className="gigs">
             <div className="container">
-                <span className="breadcrumbs">FIVERR &gt; GRAPHICS & DESIGN &gt;</span>
+                {/* <span className="breadcrumbs">FIVERR &gt; GRAPHICS & DESIGN &gt;</span>
                 <h1>design</h1>
-                <p>Explore the boundaries of art and technology with Fiverr's AI artists</p>
+                <p>Explore the boundaries of art and technology with Fiverr's AI artists</p> */}
                 <div className="menu">
                     <div className="left">
                         <span>Budget</span>
@@ -64,7 +64,7 @@ const Gigs = () => {
                         : error
                             ? <h4 style={{color:"red"}}>Something Gone Wrong</h4>
                             : data.length === 0 ?
-                                <h4 style={{color:"#d9480f"}}>no found</h4> :
+                                <h4 style={{color:"#d9480f"}}> Gigs not found !</h4> :
                                 data.map((gig) => <GigCard key={gig._id} item={gig} />)
                     }
                 </div>
