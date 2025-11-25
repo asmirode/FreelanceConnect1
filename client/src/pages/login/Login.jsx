@@ -12,6 +12,17 @@ const Login = () => {
     const handleSubmit = async (e) => {
         try {
             e.preventDefault();
+            
+            // Validate required fields
+            if (!username.trim()) {
+                alert('Username is required');
+                return;
+            }
+            if (!password.trim()) {
+                alert('Password is required');
+                return;
+            }
+            
             const res=await newRequest.post('/auth/login',{username,password});
             localStorage.setItem("currentUser",JSON.stringify(res.data));
             navigate('/');
@@ -29,12 +40,14 @@ const Login = () => {
                     type="text"
                     name="username"
                     placeholder="johndoe"
+                    required
                     onChange={e => setUsername(e.target.value)}
                 />
                 <label htmlFor="">Password</label>
                 <input
                     type="password"
                     name="password"
+                    required
                     onChange={e => setPassword(e.target.value)}
                 />
                 <button type="submit">Login</button>

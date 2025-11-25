@@ -37,4 +37,4 @@ const Success = () => {
 }
 
 export default Success;
-// filepath: c:\Users\HP\OneDrive\Desktop\Ly project code\fiverr-clone\client\src\pages\success\Success.jsx
+// filepath: c:\Users\HP\OneDrive\Desktop\Ly project code\freelanceconnect-clone\client\src\pages\success\Success.jsx

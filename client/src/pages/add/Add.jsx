@@ -80,6 +80,45 @@ const Add = () => {
   });
     const handlesubmit=(e)=>{
         e.preventDefault();
+        
+        // Validate all required fields
+        if (!state.title.trim()) {
+            alert('Title is required');
+            return;
+        }
+        if (!state.domain) {
+            alert('Domain is required');
+            return;
+        }
+        if (!state.desc.trim()) {
+            alert('Description is required');
+            return;
+        }
+        if (!state.sortTitle.trim()) {
+            alert('Service Title is required');
+            return;
+        }
+        if (!state.sortDesc.trim()) {
+            alert('Short Description is required');
+            return;
+        }
+        if (!state.deliveryTime || state.deliveryTime < 2) {
+            alert('Delivery Time is required and must be at least 2 days');
+            return;
+        }
+        if (!state.revisonNumber || state.revisonNumber < 1) {
+            alert('Revision Number is required and must be at least 1');
+            return;
+        }
+        if (!state.price || state.price <= 0) {
+            alert('Price is required and must be greater than 0');
+            return;
+        }
+        if (!state.cover) {
+            alert('Cover image is required');
+            return;
+        }
+        
         mutation.mutate(state);
         navigate('/mygigs')
     }
@@ -89,15 +128,16 @@ const Add = () => {
                 <h1>Add New Gig</h1>
                 <div className="sections">
                     <div className="left">
-                        <label htmlFor="">Title</label>
+                        <label htmlFor="">Title <span style={{color: 'red'}}>*</span></label>
                         <input type="text"
                             name="title"
                             id=""
                             placeholder="e.g. I will do something I'm really good at"
                             onChange={handlechange}
+                            required
                         />
-                        <label htmlFor="">Domain</label>
-                        <select name="domain" id="domain" onChange={handlechange} disabled={loadingDomains}>
+                        <label htmlFor="">Domain <span style={{color: 'red'}}>*</span></label>
+                        <select name="domain" id="domain" onChange={handlechange} disabled={loadingDomains} required>
                             <option value="">Select a domain</option>
                             {domains.map((domain, index) => (
                                 <option key={index} value={domain}>{domain}</option>
@@ -112,7 +152,7 @@ const Add = () => {
                             </div>
                         </div>
                         <button onClick={handleupload}>{uploading ? "uploading" : "Upload"}</button>
-                        <label htmlFor="">Description</label>
+                        <label htmlFor="">Description <span style={{color: 'red'}}>*</span></label>
                         <textarea
                             name="desc"
                             id=""
@@ -120,17 +160,20 @@ const Add = () => {
                             rows="16"
                             placeholder="A brief description to introduce your service to cusmoters"
                             onChange={handlechange}
+                            required
                         ></textarea>
                         <button onClick={handlesubmit}>Create</button>
                     </div>
                     <div className="right">
-                        <label htmlFor="">Service Title</label>
+                        <label htmlFor="">Service Title <span style={{color: 'red'}}>*</span></label>
                         <input
                             type="text"
                             placeholder="e.g. One-page web design"
                             name="sortTitle"
+                            onChange={handlechange}
+                            required
                         />
-                        <label htmlFor="">Short Description</label>
+                        <label htmlFor="">Short Description <span style={{color: 'red'}}>*</span></label>
                         <textarea
                             name="sortDesc"
                             onChange={handlechange}
@@ -138,21 +181,23 @@ const Add = () => {
                             placeholder="Short description of your service"
                             cols="30"
                             rows="10"
-
+                            required
                         ></textarea>
-                        <label htmlFor="">Delivery Time (e.g. 3 days)</label>
+                        <label htmlFor="">Delivery Time (e.g. 3 days) <span style={{color: 'red'}}>*</span></label>
                         <input 
                         type="number" 
                         name="deliveryTime" 
                         min={2} 
-                        onChange={handlechange} 
+                        onChange={handlechange}
+                        required
                         />
-                        <label htmlFor="">Revision Number</label>
+                        <label htmlFor="">Revision Number <span style={{color: 'red'}}>*</span></label>
                         <input 
                         type="number" 
                         min={1} 
                         name="revisonNumber" 
-                        onChange={handlechange} 
+                        onChange={handlechange}
+                        required
                         />
                         <label htmlFor="">Add Features</label>
                         <form action="" className="add" onSubmit={handlefeature}>
@@ -174,11 +219,13 @@ const Add = () => {
                                     </button>
                                 </div>))}
                         </div>
-                        <label htmlFor="">Price</label>
+                        <label htmlFor="">Price <span style={{color: 'red'}}>*</span></label>
                         <input 
                         type="number" 
                         onChange={handlechange}
-                         name="price" />
+                        name="price"
+                        required
+                        />
                     </div>
                 </div>
             </div>

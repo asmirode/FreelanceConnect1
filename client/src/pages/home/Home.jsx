@@ -4,9 +4,8 @@ import './home.scss';
 import Featured from "../../components/featured/Featured";
 import TrustedBy from "../../components/Trusted By/TrustedBy";
 import Slide from "../../components/Slide/Slide";
-import { cards, projects } from "../../data";
+import { cards } from "../../data";
 import CatCard from "../../components/catCard/CatCard";
-import ProjectCard from "../../components/projectCard/ProjectCard";
 import { useNavigate } from "react-router-dom";
 
 const Home = () => {
@@ -172,12 +171,12 @@ const Home = () => {
             {/* <div className="logo_maker">
                 <div className="items">
                     <div className="left">
-                        <h1>fiverr <span>logomaker.</span></h1>
+                        <h1>FreelanceConnect <span>logomaker.</span></h1>
                         <p className="first_para">Make an incredible logo<br></br>
                             <em className="first_para_em"> in minutes</em>
                         </p>
                         <p className="second_para">Pre-designed by top talent. Just add your touch.</p>
-                        <button className="logo_button"><strong>Try Fiverr Logo Maker</strong></button>
+                        <button className="logo_button"><strong>Try FreelanceConnect Logo Maker</strong></button>
                     </div>
                     <div className="right">
                         <img src="/images/logomaker.webp" alt="" />
@@ -186,7 +185,7 @@ const Home = () => {
             </div> */}
             {/* second slidebar */}
             {/* <div className="secondslide">
-                <p className="second_slider_heading">Inspiring work made on Fiverr</p>
+                <p className="second_slider_heading">Inspiring work made on FreelanceConnect</p>
                 <Slide slidesToShow={4} arrowsScroll={5}>
                     {
                         projects.map(

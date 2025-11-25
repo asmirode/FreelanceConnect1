@@ -35,10 +35,6 @@ const Navbar = () => {
             console.log(err);
         }
     }
-    const [input, setinput] = useState("");
-    const handlesubmit = () => {
-        navigate(`gigs?search=${input}`);
-    }
     return ([
         <div className={active || pathname !== "/" ? "navbar active" : "navbar "}>
             <div className="container">
@@ -106,7 +102,6 @@ const Navbar = () => {
                     </span>
                     <Link to='/login' className='link' key={333}><span>Sign in</span></Link>
 
-                    {!current_user?.isSeller && <span onClick={e => navigate('/becomeSeller')}>Become a Seller</span>}
                     {!current_user && <button onClick={e => navigate(`/register`)}>Join</button>}
                     {
                         current_user && (

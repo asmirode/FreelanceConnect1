@@ -3,6 +3,30 @@ import './resgister.scss';
 import upload from "../../utils/upload";
 import newRequest from "../../utils/newRequest";
 import { useNavigate } from "react-router-dom";
+
+const COUNTRIES = [
+  "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", "Australia", "Austria",
+  "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan",
+  "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Cambodia", "Cameroon",
+  "Canada", "Cape Verde", "Central African Republic", "Chad", "Chile", "China", "Colombia", "Comoros", "Congo", "Costa Rica",
+  "Croatia", "Cuba", "Cyprus", "Czech Republic", "Czechia", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "East Timor",
+  "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini", "Ethiopia", "Fiji", "Finland",
+  "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea",
+  "Guinea-Bissau", "Guyana", "Haiti", "Honduras", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq",
+  "Ireland", "Israel", "Italy", "Ivory Coast", "Jamaica", "Japan", "Jordan", "Kazakhstan", "Kenya", "Kiribati",
+  "Kosovo", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein",
+  "Lithuania", "Luxembourg", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania",
+  "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Morocco", "Mozambique", "Myanmar",
+  "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Korea", "North Macedonia",
+  "Norway", "Oman", "Pakistan", "Palau", "Palestine", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines",
+  "Poland", "Portugal", "Qatar", "Romania", "Russia", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines", "Samoa",
+  "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia",
+  "Solomon Islands", "Somalia", "South Africa", "South Korea", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Sweden",
+  "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Timor-Leste", "Togo", "Tonga", "Trinidad and Tobago",
+  "Tunisia", "Turkey", "Turkmenistan", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States", "Uruguay",
+  "Uzbekistan", "Vanuatu", "Vatican City", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"
+];
+
 const Register = () => {
   const [file, setFile] = useState(null);
   const [user, setUser] = useState({
@@ -70,6 +94,28 @@ const Register = () => {
     console.log('Selected domain:', selectedDomain);
     console.log('Selected subdomain:', selectedSubdomain);
     
+    // Validate required fields
+    if (!user.username.trim()) {
+      alert('Username is required');
+      return;
+    }
+    if (!user.email.trim()) {
+      alert('Email is required');
+      return;
+    }
+    if (!user.password.trim()) {
+      alert('Password is required');
+      return;
+    }
+    if (!user.country.trim()) {
+      alert('Country is required');
+      return;
+    }
+    if (!user.desc.trim()) {
+      alert('Description is required');
+      return;
+    }
+    
     try {
       let url = "";
       if (file) {
@@ -103,7 +149,7 @@ const Register = () => {
       <form onSubmit={handleSubmit} >
         <div className="left">
           <h1>Create a new account</h1>
-          <label htmlFor="">Username</label>
+          <label htmlFor="">Username <span style={{color: 'red'}}>*</span></label>
           <input
             name="username"
             type="text"
@@ -111,7 +157,7 @@ const Register = () => {
             onChange={handlechange}
             required
           />
-          <label htmlFor="">Email</label>
+          <label htmlFor="">Email <span style={{color: 'red'}}>*</span></label>
           <input
             name="email"
             type="email"
@@ -119,7 +165,7 @@ const Register = () => {
             onChange={handlechange}
             required
           />
-          <label htmlFor="">Password</label>
+          <label htmlFor="">Password <span style={{color: 'red'}}>*</span></label>
           <input
             name="password"
             type="password"
@@ -133,14 +179,19 @@ const Register = () => {
               setFile(e.target.files[0]);
             }}
           />
-          <label htmlFor="">Country</label>
-          <input
+          <label htmlFor="">Country <span style={{color: 'red'}}>*</span></label>
+          <select
             name="country"
-            type="text"
-            placeholder="Usa"
             onChange={handlechange}
             required
-          />
+          >
+            <option value="">-- Select a Country --</option>
+            {COUNTRIES.map((country, index) => (
+              <option key={index} value={country}>
+                {country}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="right">
           <h1>I want to become a seller</h1>
@@ -194,7 +245,7 @@ const Register = () => {
             placeholder="+1 234 567 89"
             onChange={handlechange}
           />
-          <label htmlFor="">Description</label>
+          <label htmlFor="">Description <span style={{color: 'red'}}>*</span></label>
           <textarea
             placeholder="A short description of yourself"
             name="desc"
@@ -202,6 +253,7 @@ const Register = () => {
             cols="30"
             rows="10"
             onChange={handlechange}
+            required
           ></textarea>
           <button type="submit">Register</button>
         </div>
