@@ -38,22 +38,15 @@ const Gig = () => {
                         <div className="user">
                             <img src={dataUser.img||"/images/noavtar.jpeg"} alt="" className="pp" />
                             <span>{dataUser.username}</span>
-                            {!isNaN(data.totalStars / data.starNumber) &&
-                                (<div className="stars">
-                                    {Array(Math.round(data.totalStars / data.starNumber)).fill().map((item, i) =>
-                                        <img src="/images/star.png" alt="" key={i} />
-                                    )}
-                                    <span> {Math.round(data.totalStars / data.starNumber)} </span>
-                                </div>)}
                         </div>}
                         <Slider slideToShow={1} arrowsScroll={1} className="slider">
-                            {data.images.map((img) => (
+                            {data.images && data.images.length > 0 ? data.images.map((img) => (
                                 <img
                                     key={img}
                                     src={img}
                                     alt=""
                                 />
-                            ))}
+                            )) : <img src={data.cover} alt="" />}
                         </Slider>
                         <h2>About This gig </h2>
                         <p>
@@ -66,14 +59,6 @@ const Gig = () => {
                                 <img src={dataUser.img || "/images/noavtar.jpeg"} alt="" />
                                 <div className="info">
                                     <span>{dataUser.username}</span>
-                                    {!isNaN(data.totalStars / data.starNumber) &&
-                                        (<div className="stars">
-                                            {Array(Math.round(data.totalStars / data.starNumber)).fill().map((item, i) =>
-                                                <img src="/images/star.png" alt="" key={i} />
-                                            )}
-                                            <span> {Math.round(data.totalStars / data.starNumber)} </span>
-                                        </div>)}
-                                    <button>Contact Me</button>
                                 </div>
                             </div>}
                             <div className="box">
@@ -116,22 +101,10 @@ const Gig = () => {
                                     <span>{dataUser.username}</span>
                                 </div>}
                                 <h3>{data.title}</h3>
-                                <p>{data.desc}</p>
-                                <div className="star">
-                                    <img src="/images/star.png" alt="" />
-                                    <span>
-                                        {!isNaN(data.totalStars / data.starNumber) &&
-                                            Math.round(data.totalStars / data.starNumber)}
-                                    </span>
-                                </div>
-                                <div className="details-info">
+                                <div className="caption-details">
                                     <div className="item">
                                         <img src="/images/clock.png" alt="" />
-                                        <span>{data.deliveryTime} days Delivery</span>
-                                    </div>
-                                    <div className="item">
-                                        <img src="/images/recycle.png" alt="" />
-                                        <span>{data.rivisonNumber} Revisions</span>
+                                        <span>{data?.deliveryTime || 0} days Delivery</span>
                                     </div>
                                 </div>
                             </div>
@@ -140,7 +113,7 @@ const Gig = () => {
                                 <img src="/images/heart.png" alt="" />
                                 <div className="price">
                                     <span>STARTING AT</span>
-                                    <h2>$ {data.price}<sup>99</sup></h2>
+                                    <h2>₹ {data.price} INR</h2>
                                 </div>
                             </div>
                         </div>

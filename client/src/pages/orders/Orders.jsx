@@ -51,7 +51,7 @@ const Orders = () => {
                                 <img src={data.img} alt="" className="img" />
                             </td>
                             <td>{order.title}</td>
-                            <td>{order.price}</td>
+                            <td>₹ {order.price} INR</td>
                             <td>
                                 <img className="message" src="/images/message.png" alt="" onClick={() => handleContact(order)} />
                             </td>

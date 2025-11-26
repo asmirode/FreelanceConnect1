@@ -6,6 +6,20 @@ import { useQueryClient,useMutation } from "@tanstack/react-query";
 import newRequest from "../../utils/newRequest";
 import { useNavigate } from "react-router-dom";
 const Add = () => {
+    const navigate = useNavigate();
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    
+    // Check if user is logged in and is a seller
+    useEffect(() => {
+        if (!currentUser) {
+            alert("Please log in to create a gig");
+            navigate("/login");
+        } else if (!currentUser.isSeller) {
+            alert("Only sellers can create gigs. Please update your profile to become a seller.");
+            navigate("/");
+        }
+    }, [currentUser, navigate]);
+
     const [singleFile, setsingleFile] = useState(undefined);
     const [files, setFiles] = useState([]);
     const [uploading, setUploading] = useState(false);
@@ -67,7 +81,6 @@ const Add = () => {
             console.log(error);
         }
     };
-    const navigate=useNavigate();
     const queryClient = useQueryClient()
   
   const mutation = useMutation({
@@ -75,7 +88,11 @@ const Add = () => {
       return newRequest.post("/gigs", gig);
     },
     onSuccess:()=>{
-      queryClient.invalidateQueries(["myGigs"])
+      queryClient.invalidateQueries(["myGigs"]);
+      navigate('/mygigs');
+    },
+    onError: (error) => {
+      alert('Error creating gig: ' + (error.response?.data?.message || error.message));
     }
   });
     const handlesubmit=(e)=>{
@@ -86,7 +103,7 @@ const Add = () => {
             alert('Title is required');
             return;
         }
-        if (!state.domain) {
+        if (!state.cat) {
             alert('Domain is required');
             return;
         }
@@ -94,20 +111,12 @@ const Add = () => {
             alert('Description is required');
             return;
         }
-        if (!state.sortTitle.trim()) {
-            alert('Service Title is required');
-            return;
-        }
         if (!state.sortDesc.trim()) {
-            alert('Short Description is required');
+            alert('Caption is required');
             return;
         }
         if (!state.deliveryTime || state.deliveryTime < 2) {
             alert('Delivery Time is required and must be at least 2 days');
-            return;
-        }
-        if (!state.revisonNumber || state.revisonNumber < 1) {
-            alert('Revision Number is required and must be at least 1');
             return;
         }
         if (!state.price || state.price <= 0) {
@@ -120,7 +129,6 @@ const Add = () => {
         }
         
         mutation.mutate(state);
-        navigate('/mygigs')
     }
     return ([
         <div className="add">
@@ -132,70 +140,65 @@ const Add = () => {
                         <input type="text"
                             name="title"
                             id=""
-                            placeholder="e.g. I will do something I'm really good at"
+                            placeholder="e.g. Logo Design, Website Development"
                             onChange={handlechange}
                             required
                         />
                         <label htmlFor="">Domain <span style={{color: 'red'}}>*</span></label>
                         <select name="domain" id="domain" onChange={handlechange} disabled={loadingDomains} required>
-                            <option value="">Select a domain</option>
+                            <option value="">Select a Domain</option>
                             {domains.map((domain, index) => (
                                 <option key={index} value={domain}>{domain}</option>
                             ))}
                         </select>
+                        <label htmlFor="">Caption <span style={{color: 'red'}}>*</span></label>
+                        <textarea
+                            name="sortDesc"
+                            onChange={(e) => {
+                                if (e.target.value.length <= 100) {
+                                    handlechange(e);
+                                }
+                            }}
+                            id=""
+                            placeholder="e.g. I will do something I'm really good at..."
+                            cols="30"
+                            rows="5"
+                            maxLength="100"
+                            required
+                        ></textarea>
+                        <p style={{fontSize: '12px', color: '#999'}}>{state?.sortDesc?.length || 0}/100</p>
                         <div className="images">
                             <div className="imagesInputs">
-                                <label htmlFor="">Cover Image</label>
-                                <input type="file" name="" id="" onChange={e => setsingleFile(e.target.files[0])} />
+                                <label htmlFor="">Cover Image <span style={{color: 'red'}}>*</span></label>
+                                <input type="file" name="" id="" onChange={e => setsingleFile(e.target.files[0])} required />
                                 <label htmlFor="">Upload Images</label>
                                 <input type="file" name="" id="" multiple onChange={e => setFiles(e.target.files)} />
                             </div>
                         </div>
-                        <button onClick={handleupload}>{uploading ? "uploading" : "Upload"}</button>
+                        <button onClick={handleupload} style={{width: 'fit-content', padding: '10px 20px', fontSize: '14px'}}>{uploading ? "uploading" : "Upload"}</button>
+                    </div>
+                    <div className="right">
                         <label htmlFor="">Description <span style={{color: 'red'}}>*</span></label>
                         <textarea
                             name="desc"
                             id=""
                             cols="30"
-                            rows="16"
-                            placeholder="A brief description to introduce your service to cusmoters"
-                            onChange={handlechange}
+                            rows="8"
+                            placeholder="A brief description to introduce your service to customers"
+                            onChange={(e) => {
+                                if (e.target.value.length <= 500) {
+                                    handlechange(e);
+                                }
+                            }}
+                            maxLength="500"
                             required
                         ></textarea>
-                        <button onClick={handlesubmit}>Create</button>
-                    </div>
-                    <div className="right">
-                        <label htmlFor="">Service Title <span style={{color: 'red'}}>*</span></label>
-                        <input
-                            type="text"
-                            placeholder="e.g. One-page web design"
-                            name="sortTitle"
-                            onChange={handlechange}
-                            required
-                        />
-                        <label htmlFor="">Short Description <span style={{color: 'red'}}>*</span></label>
-                        <textarea
-                            name="sortDesc"
-                            onChange={handlechange}
-                            id=""
-                            placeholder="Short description of your service"
-                            cols="30"
-                            rows="10"
-                            required
-                        ></textarea>
+                        <p style={{fontSize: '12px', color: '#999'}}>{state?.desc?.length || 0}/500</p>
                         <label htmlFor="">Delivery Time (e.g. 3 days) <span style={{color: 'red'}}>*</span></label>
                         <input 
                         type="number" 
                         name="deliveryTime" 
                         min={2} 
-                        onChange={handlechange}
-                        required
-                        />
-                        <label htmlFor="">Revision Number <span style={{color: 'red'}}>*</span></label>
-                        <input 
-                        type="number" 
-                        min={1} 
-                        name="revisonNumber" 
                         onChange={handlechange}
                         required
                         />
@@ -219,7 +222,7 @@ const Add = () => {
                                     </button>
                                 </div>))}
                         </div>
-                        <label htmlFor="">Price <span style={{color: 'red'}}>*</span></label>
+                        <label htmlFor="">Price (INR) <span style={{color: 'red'}}>*</span></label>
                         <input 
                         type="number" 
                         onChange={handlechange}
@@ -228,6 +231,7 @@ const Add = () => {
                         />
                     </div>
                 </div>
+                <button onClick={handlesubmit} style={{display: 'block', margin: '40px auto', padding: '15px 50px', backgroundColor: '#1dbf73', color: 'white', border: 'none', fontSize: '18px', fontWeight: '500', cursor: 'pointer', borderRadius: '4px'}}>Create</button>
             </div>
         </div>
     ]);

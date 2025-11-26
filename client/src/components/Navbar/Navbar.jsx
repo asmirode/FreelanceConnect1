@@ -100,7 +100,7 @@ const Navbar = () => {
                         </img>
                         English
                     </span>
-                    <Link to='/login' className='link' key={333}><span>Sign in</span></Link>
+                    {!current_user && <Link to='/login' className='link' key={333}><span>Sign in</span></Link>}
 
                     {!current_user && <button onClick={e => navigate(`/register`)}>Join</button>}
                     {

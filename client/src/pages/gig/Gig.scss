@@ -167,7 +167,7 @@
             position: sticky;
             top: 150px;
             height: max-content;
-            max-height: 500px;
+            max-height: none;
 
             .price {
                 display: flex;
@@ -297,6 +297,30 @@
                             font-size: 14px;
                             font-weight: bold;
                             color: #ffc108;
+                        }
+                    }
+
+                    .caption-details {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 10px;
+                        margin-top: 15px;
+                        padding-top: 15px;
+                        border-top: 1px solid #e0e0e0;
+                        border-bottom: 1px solid #e0e0e0;
+                        padding-bottom: 15px;
+
+                        .item {
+                            display: flex;
+                            align-items: center;
+                            gap: 8px;
+                            font-size: 13px;
+                            color: #666;
+
+                            img {
+                                width: 16px;
+                                height: 16px;
+                            }
                         }
                     }
 

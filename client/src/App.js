@@ -2,6 +2,7 @@ import React from 'react';
 import './App.scss';
 import Footer from './components/Footer/Footer';
 import Navbar from './components/Navbar/Navbar';
+import ScrollToTop from './components/ScrollToTop/ScrollToTop';
 import Add from './pages/add/Add';
 import Message from './pages/message/Message';
 import Messages from './pages/messages/Messages';
@@ -33,6 +34,7 @@ function App() {
     return (
       <QueryClientProvider client={queryClient} key={55}>
         <div className='app'>
+          <ScrollToTop />
           <Navbar key={3} />
           <Outlet key={5454} />
           <hr></hr>

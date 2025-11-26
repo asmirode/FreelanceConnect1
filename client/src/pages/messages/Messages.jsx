@@ -4,6 +4,23 @@ import { Link } from 'react-router-dom';
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import newRequest from "../../utils/newRequest";
 import moment from 'moment';
+
+const UserName = ({ userId }) => {
+    const { data: userData } = useQuery({
+        queryKey: [`user-${userId}`],
+        queryFn: () =>
+            newRequest.get(`/users/${userId}`).then((res) => {
+                return res.data;
+            }),
+    });
+    return (
+        <div className="userInfo">
+            <img src={userData?.img || '/images/noavtar.jpeg'} alt="profile" />
+            <span>{userData?.username || 'Loading...'}</span>
+        </div>
+    );
+};
+
 const Messages = () => {
     const currentUser = JSON.parse(localStorage.getItem("currentUser"));
     const queryClient = useQueryClient();
@@ -56,7 +73,7 @@ const Messages = () => {
                                 key={c.id}
                             >
                                 {/* {console.log(c)} */}
-                                <td>{currentUser.isSeller ? c.buyerId : c.sellerId}</td>
+                                <td><UserName userId={currentUser.isSeller ? c.buyerId : c.sellerId} /></td>
                                 <td>
                                     {/* <Link to={`/message/${c.id}`} className="link">
                                         {c?.lastMessage?.substring(0, 100)}...
@@ -67,12 +84,19 @@ const Messages = () => {
                                 </td>
                                 <td>{moment(c.updatedAt).fromNow()}</td>
                                 <td>
-                                    {((currentUser.isSeller && !c.readBySeller) ||
-                                        (!currentUser.isSeller && !c.readByBuyer)) && (
-                                            <button onClick={() => handleRead(c.id)}>
-                                                Mark as Read
+                                    <div className="actionButtons">
+                                        <Link to={`/message/${c.id}`} className="link">
+                                            <button className="openChat">
+                                                Open Chat
                                             </button>
-                                    )}
+                                        </Link>
+                                        {((currentUser.isSeller && !c.readBySeller) ||
+                                            (!currentUser.isSeller && !c.readByBuyer)) && (
+                                                <button onClick={() => handleRead(c.id)}>
+                                                    Mark as Read
+                                                </button>
+                                        )}
+                                    </div>
                                 </td>
                             </tr>
                         ))}

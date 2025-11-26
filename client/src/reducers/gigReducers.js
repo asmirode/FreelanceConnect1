@@ -8,7 +8,6 @@ export const INITIAL_STATE = {
     shortTitle: "",
     shortDesc: "",
     deliveryTime: 0,
-    revisionNumber: 0,
     features: [],
     price: 0,
   };

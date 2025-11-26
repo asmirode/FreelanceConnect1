@@ -12,7 +12,8 @@ const GigSchema = new Schema({
   },
   desc:{
     type:String,
-    require:true
+    require:true,
+    maxlength: 500
   },
   totalStars:{
     type:Number,
@@ -38,19 +39,11 @@ const GigSchema = new Schema({
     type:[String],
     require:false
   },
-  sortTitle:{
-    type:String,
-    require:true
-  },
   sortDesc:{
     type:String,
     require:true
   },
   deliveryTime:{
-    type:Number,
-    require:true
-  },
-  rivisonNumber:{
     type:Number,
     require:true
   },

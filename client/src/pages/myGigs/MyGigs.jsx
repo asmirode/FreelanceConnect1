@@ -59,7 +59,7 @@ function MyGigs() {
                     <img className="image" src={gig.cover} alt="" />
                   </td>
                   <td>{gig.title}</td>
-                  <td>{gig.price}</td>
+                  <td>₹ {gig.price} INR</td>
                   <td>{gig.sales}</td>
                   <td>
                     <img
