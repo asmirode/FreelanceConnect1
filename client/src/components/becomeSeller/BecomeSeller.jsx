@@ -232,7 +232,7 @@ const BecomeSeller = () => {
       setRequirements(res.data.requirements);
 
       if (res.data.matches && res.data.matches.length > 0) {
-        console.log('Setting matches:', res.data.matches);
+        console.log('✅ Setting matches:', res.data.matches.length, 'matches found');
         setMatches(res.data.matches);
 
         const allMatchedKeywords = new Set();
@@ -453,14 +453,26 @@ const BecomeSeller = () => {
         </div>
 
         {/* Requirements Summary with Recommended Gigs */}
-        {requirements && requirements.skills && requirements.skills.length > 0 && (
+        {requirements && (requirements.skills?.length > 0 || requirements.keywords?.length > 0 || requirements.primaryService) && (
           <div className="requirements-summary">
             <h3>📋 Your Requirements</h3>
+            {requirements.primaryService && (
+              <div style={{ marginBottom: '15px' }}>
+                <p style={{ fontWeight: 500, color: '#1dbf73', fontSize: '16px' }}>
+                  🎯 Primary Service: <span style={{ color: '#333' }}>{requirements.primaryService}</span>
+                </p>
+              </div>
+            )}
+            {(requirements.skills?.length > 0 || requirements.keywords?.length > 0) && (
             <div className="requirement-tags">
-              {requirements.skills.map((skill, i) => (
-                <span key={i} className="tag">{skill}</span>
+                {requirements.skills?.map((skill, i) => (
+                  <span key={`skill-${i}`} className="tag">{skill}</span>
+                ))}
+                {requirements.keywords?.map((keyword, i) => (
+                  <span key={`keyword-${i}`} className="tag">{keyword}</span>
               ))}
             </div>
+            )}
             {requirements.budget && requirements.budget.max > 0 && (
               <p>💰 Budget: ${requirements.budget.min} - ${requirements.budget.max}</p>
             )}
